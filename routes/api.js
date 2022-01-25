@@ -10,7 +10,7 @@ Contents API
 */
 router.post('/createContent',contentController.createContent);
 router.put('/updateContent/:id',contentController.updateContent);
-router.get('/getAllContents' , contentController.getAllContents);
+router.get('/getAllContents' , contentController.getAllContents);+
 router.get('/getAllContentsForWeb' , contentController.getAllContentsForWeb);
 router.get('/content/:id',contentController.getContentById);
 router.post('/delete/content',contentController.deleteContent);
