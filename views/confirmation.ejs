@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" ng-app="adsServer">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Confirmation Admin</title>
+<!-- STYLES -->
+<!-- build:css lib/css/main.min.css -->
+<link rel="stylesheet" type="text/css" href="/components/bootstrap/dist/css/bootstrap.min.css">
+    <!--  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">-->
+    <link rel="stylesheet" type="text/css" href="/components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/components/rdash-ui/dist/css/rdash.min.css">
+    <link rel="stylesheet" type="text/css" href="/components/multiselect/dist/css/bootstrap-multiselect.css">
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.css">
+    <link rel="stylesheet" href="/stylesheets/toastr.min.css">
+    <!-- endbuild -->
+    <!-- SCRIPTS -->
+    <!-- build:js lib/js/main.min.js -->
+<script type="text/javascript" src="/components/jquery/dist/jquery.min.js"></script>
+
+    <!-- endbuild -->
+    <script type="text/javascript" src="/components/bootstrap/dist/js/bootstrap.js"></script>
+
+    <!--<script src="/javascripts/ui-bootstrap-tpls.min.js"></script>
+    -->
+
+    <!-- Bootstrap core JavaScript -->
+
+
+
+<script src="/javascripts/toastr.min.js"></script>
+
+
+
+
+    <!-- endbuild -->
+    <!-- Custom Scripts -->
+
+</head>
+<body >
+
+<!-- Sidebar -->
+<!-- End Sidebar -->
+
+<div id="content-wrapper">
+    <div class="page-content">
+
+    <!-- Header Bar -->
+<div class="row header">
+    <div class="col-xs-12">
+    <div class="user pull-right">
+    <div class="meta">
+    <div class="page">
+    </div>
+<div class="breadcrumb-links">
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- End Header Bar -->
+
+<!-- Main Content -->
+<div  class="row">
+    <div class="col-sm-12" style="height: 200px"></div>
+    <div style="padding: 0px; margin: 0px" class="row">
+    <div class="col-md-2"></div>
+    <div style="background-color: #fff;color: #3c3c3c" class="col-md-8 text-center">
+
+    <% if(status==true){%>
+<%-message%>
+    <%}else{%>
+<span class="text-danger"><%-message%></span>
+        <%}%>
+
+
+</div>
+<div class="col-md-2"></div>
+    </div>
+    <div >
+    <div class="col-md-2"></div>
+   <div class="col-md-2"></div>
+    </div>
+    </div>
+
+
+
+    </div><!-- End Page Content -->
+</div><!-- End Content Wrapper -->
+</div><!-- End Page Wrapper -->
+</body>
+
+
+
+<script>
+
+window.toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    </script>
+    </html>

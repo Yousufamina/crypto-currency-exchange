@@ -1,0 +1,108 @@
+<style>
+    .rating {
+        width: 180px;
+    }
+
+    .rating__star1, .rating__star2, .rating__star3 , .rating__star4  {
+        cursor: pointer;
+        color: #dabd18b2;
+    }
+
+</style>
+    <div class="col-md-12">
+        <div class="ms-panel">
+            <div class="ms-panel-header">
+                <h6>{{heading}}</h6>
+            </div>
+
+            <div class="ms-panel-body">
+                <form ng-submit="save()" >
+                <div class="form-group">
+                    <label class="" for="name">Name: </label>
+                    <input type="text" class="form-control" ng-model="content.name" id="name" placeholder="Enter Name">
+                </div>
+                <div class="form-group">
+                    <label class="" for="url">URL: </label>
+                    <input type="text" class="form-control" ng-model="content.url" id="url" placeholder="Enter URL">
+                </div>
+                <div class="form-group">
+                    <label class="" for="tradingFees">Trading Fees: </label>
+                    <input type="text" class="form-control" ng-model="content.tradingFees" id="tradingFees" placeholder="Enter Trading Fees">
+                </div>
+                <div class="form-group">
+                    <label class="" for="country">Country: </label>
+                    <input type="text" class="form-control" ng-model="content.country" id="country" placeholder="Enter Country">
+                </div>
+                <div class="form-group">
+                    <label class="" for="currency">Currency: </label>
+                    <input type="text" class="form-control"  ng-model="content.currency" id="currency" placeholder="Enter Currency">
+                </div>
+                <div class="form-group">
+                    <label class="" for="promotion">Promotion: </label>
+                    <input type="text" class="form-control" ng-model="content.promotion" id="promotion" placeholder="Enter Promotion">
+                </div>
+
+                <div class="form-group">
+                    <label class="" for="easeOfUse">Ease Of Use: </label>
+                    <div class="rating" id="easeOfUse" ng-model="content.easeOfUse" >
+                        <i class="rating__star1 fa fa-star-o" ></i>
+                        <i class="rating__star1 fa fa-star-o" ></i>
+                        <i class="rating__star1 fa fa-star-o" ></i>
+                        <i class="rating__star1 fa fa-star-o" ></i>
+                        <i class="rating__star1 fa fa-star-o" ></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="" for="reputation">Reputation: </label>
+                    <div class="rating" id="reputation">
+                        <i class="rating__star2 fa fa-star-o"></i>
+                        <i class="rating__star2 fa fa-star-o"></i>
+                        <i class="rating__star2 fa fa-star-o"></i>
+                        <i class="rating__star2 fa fa-star-o"></i>
+                        <i class="rating__star2 fa fa-star-o"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="" for="depositMethods">Deposit Methods: </label>
+                    <div class="rating" id="depositMethods">
+                        <i class="rating__star3 fa fa-star-o"></i>
+                        <i class="rating__star3 fa fa-star-o"></i>
+                        <i class="rating__star3 fa fa-star-o"></i>
+                        <i class="rating__star3 fa fa-star-o"></i>
+                        <i class="rating__star3 fa fa-star-o"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="" for="fees">Fees: </label>
+                    <div class="rating" id="fees">
+                        <i class="rating__star4 fa fa-star-o"></i>
+                        <i class="rating__star4 fa fa-star-o"></i>
+                        <i class="rating__star4 fa fa-star-o"></i>
+                        <i class="rating__star4 fa fa-star-o"></i>
+                        <i class="rating__star4 fa fa-star-o"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="" for="image">Upload Image: </label>
+                    <input accept="image/*" type="file" class="form-control" placeholder="Image" id="image" ng-model="content.image" file-model="content.image">
+                </div>
+                <div class="form-group">
+                    <label class="" for="detail">Detail </label>
+                    <textarea class="form-control" ng-model="content.detail"  rows="7" cols="80" id="detail" placeholder="Enter Detail"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="" for="editor1">Key Features: </label>
+                    <textarea class="form-control" ng-model="content.keyFeatures" name="editor1" id="editor1" rows="30" cols="80" placeholder="Enter Key Features">
+                </textarea>
+                </div>
+
+                 <button type="submit" class="btn btn-success">Save</button>
+<!--                <button class="btn btn-default">Cancel</button>-->
+
+            </form>
+        </div>
+    </div>
+
+    </div>
+

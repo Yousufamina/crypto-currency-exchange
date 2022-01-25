@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Theme Made By www.w3schools.com - No Copyright -->
+    <title>QR Waiter Caller</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://oclgroup.org/wp-content/uploads/2021/04/oclshuttle-logo-1.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .bg-1 {
+            background-color: #1abc9c; /* Green */
+            color: #ffffff;
+        }
+        .bg-2 {
+            background-color: #474e5d; /* Dark Blue */
+            color: #ffffff;
+        }
+        .container-fluid1 {
+            padding-top: 70px;
+            padding-bottom: 20px;
+        }
+        .container-fluid {
+            padding-top: 70px;
+            padding-bottom: 150px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid1 bg-1 text-center">
+    <img src="<%=logo%>" class="img-circle" alt="Bird" width="200" height="67">
+    <h3><%=hotelName%></h3>
+</div>
+
+<div class="container-fluid bg-2 text-center">
+    <form id="form" action="/callWaiter/<%=code%>" >
+        <button type="submit" class="btn btn-primary" style="width: 48%; font-size: 24px;">Call Waiter</button>
+    </form>
+    </br>
+    </br>
+    <button class="btn btn-primary imagePreviewModal" value="<%=menue%>" style="width: 48%; font-size: 24px;">Show Menu</button>
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="imagePreviewModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">Image Preview</div>
+            <div class="modal-body">
+                <img style="width: 100%;" id="imagePreviewSrc" src=""/>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default " data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+<script>
+
+    $('#form').submit(function(e){
+        e.preventDefault();
+        var url = $(this).closest('form').attr('action');
+            $.ajax({
+            url: url,
+            type: 'post',
+            data:$('#form').serialize(),
+            success:function(){
+                alert("Your call has been established");
+                // Whatever you want to do after the form is successfully submitted
+            }
+        });
+    });
+
+
+    $(document).on("click",'.imagePreviewModal',function(){
+        if($(this).attr('value') && $(this).attr('value')!='' && $(this).attr('value').indexOf('upload/')){
+            $("#imagePreviewSrc").attr('src',$(this).attr('value'))
+            $("#imagePreviewModal").modal('show')
+        }
+    })
+
+</script>

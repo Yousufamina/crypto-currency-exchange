@@ -1,0 +1,84 @@
+<%- include('includes/heads');%>
+<body ng-app="stoneApp" class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <%- include('includes/headers');%>
+    <!-- Left side column. contains the logo and sidebar -->
+    <%- include('includes/sidebar');%>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="height: 1950px !important;">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Dashboard
+                <small>Control panel</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="spinner spinner-3" id="waitSpinner"  style="visibility: hidden; position: fixed; top: 50%;left: 50%; height:60px; z-index:99;"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>
+            <div ui-view class="col-xs-12">
+
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <%- include('includes/footer');%>
+    <!-- Control Sidebar -->
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+<%- include('includes/scripts'); %>
+<div class="modal fade bs-example-modal-sm" id="imagePreviewModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">Image Preview</div>
+            <div class="modal-body">
+                <img style="width: 100%;" id="imagePreviewSrc" src=""/>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default " data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    $(document).on("click",'.imagePreviewModal',function(){
+        if($(this).attr('src') && $(this).attr('src')!='' && $(this).attr('src').indexOf('upload/')){
+
+            $("#imagePreviewModal").modal('show')
+            $("#imagePreviewSrc").attr('src',$(this).attr('src'))
+
+        }
+    })
+    window.toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+</html>

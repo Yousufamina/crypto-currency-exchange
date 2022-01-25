@@ -1,0 +1,24 @@
+
+<div class="col-md-12">
+    <div class="ms-panel">
+        <div class="ms-panel-header">
+            <h6>{{heading}}</h6>
+        </div>
+
+        <div class="ms-panel-body">
+            <form ng-submit="save()" >
+
+                <div class="form-group">
+                    <label class="" for="editor1">About Us </label>
+                    <textarea class="form-control"  ng-model="aboutUs.content" name="editor1" id="editor1" rows="30" cols="80" placeholder="Enter About Us Content">
+                    </textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success">Update</button>
+                <!--                <button class="btn btn-default">Cancel</button>-->
+
+            </form>
+        </div>
+    </div>
+
+</div>

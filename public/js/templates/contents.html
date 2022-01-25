@@ -1,0 +1,111 @@
+
+    <div class="ms-panel">
+        <div class="ms-panel-header new"><h6>Contents</h6>
+            <button type="button" class="btn btn-outline-primary"> <a href="#/add-content">Add New Content</a></button>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="ms-panel-body">
+            <div class="table-responsive">
+                <table id="example1" class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Sr#</th>
+                        <th>Name</th>
+                        <th>URL</th>
+                        <th>Trading Fees</th>
+                        <th>Country</th>
+                        <th>Currency</th>
+                        <th>Promotion</th>
+                        <th>Ease Of Use</th>
+                        <th>Reputation</th>
+                        <th>Deposit Methods</th>
+                        <th>Fees</th>
+                        <th>Detail</th>
+                        <th>Key Features</th>
+                        <th>Date</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr  ng-if="data.length" id="{{content.id}}" ng-repeat="content in data" >
+                        <td>{{$index+1}}</td>
+                        <td>{{content.name}}</td>
+                        <td>{{content.url}}</td>
+                        <td>{{content.tradingFees}}</td>
+                        <td>{{content.country}}</td>
+                        <td>{{content.currency}}</td>
+                        <td>{{content.promotion}}</td>
+                        <td>{{content.easeOfUse}}</td>
+                        <td>{{content.reputation}}</td>
+                        <td>{{content.depositMethods}}</td>
+                        <td>{{content.fees}}</td>
+                        <td>{{content.detail}}</td>
+                        <td>{{content.keyFeatures}}</td>
+                        <td>{{dated(content.createdDate)}}</td>
+                        <td><img class="imagePreviewModal" src="{{content.image}}" width="100" alt="logo"/></td>
+                        <td>
+                            <a ng-click="removeData(content._id)" ><i class="fa fa-trash"></i> </a><br/>
+                            <a href="#content/{{content._id}}" ><i class="fa fa-pencil"></i> </a><br/>
+                        </td>
+                    </tr>
+                    <tr ng-if="data.length==0">
+                        <td>No Content added</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <!-- /.box-body -->
+
+<!--    </div>-->
+
+
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" id="confirmation" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <label style="color:#3c3c3c" >Are you sure ! you want to delete?</label>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" ng-click="removeConfirmed()" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    setTimeout(function(){
+        var h =  $('.wrapper').height()
+        h = h-100;
+        $('.content-wrapper').css("height",h)
+    },500)
+
+
+</script>
