@@ -204,42 +204,42 @@ const contentController = {
             // get all contents
             let contents = await ContentModel.find().select('-detail,-keyFeatures').lean().exec();
 
-            // for(let k=0; k<contents.length; k++){
-            //     let content = contents[k];
-            //     let starObj = {star1:0,star2:0,star3:0,star4:0,star5:0};
-            //     let notes = content.notes;
-            //     let totalRatings = notes.length;
-            //     let globalRatings = 0;
-            //     if(notes.length){
-            //         // calculate each star rating percentage
-            //         for(let i=0; i<notes.length; i++){
-            //             let star = notes[i].star;
-            //             if (star >= 1 && star < 2) {
-            //                 starObj.star1 += 1;
-            //             }
-            //             if (star >= 2 && star < 3) {
-            //                 starObj.star2 += 1;
-            //             }
-            //             if (star >= 3 && star < 4) {
-            //                 starObj.star3 += 1;
-            //             }
-            //             if (star >= 4 && star < 5) {
-            //                 starObj.star4 += 1;
-            //             }
-            //             if (star==5) {
-            //                 starObj.star5 += 1;
-            //             }
-            //         }
-            //
-            //         //calculate global rating
-            //         // (5*252 + 4*124 + 3*40 + 2*29 + 1*33) / (252+124+40+29+33) = 4.11 and change
-            //         // That's a weighted average, where you weigh each rating with the number of votes it got:
-            //         globalRatings =  (starObj.star1 * 1  + starObj.star2 * 2 + starObj.star3 * 3 + starObj.star4 * 4 + starObj.star5 * 5) / (totalRatings);
-            //
-            //     }
-            //     delete contents[k].notes;
-            //     contents[k].globalRatings = globalRatings;
-            // }
+            for(let k=0; k<contents.length; k++){
+                let content = contents[k];
+                let starObj = {star1:0,star2:0,star3:0,star4:0,star5:0};
+                let notes = content.notes;
+                let totalRatings = notes.length;
+                let globalRatings = 0;
+                if(notes.length){
+                    // calculate each star rating percentage
+                    for(let i=0; i<notes.length; i++){
+                        let star = notes[i].star;
+                        if (star >= 1 && star < 2) {
+                            starObj.star1 += 1;
+                        }
+                        if (star >= 2 && star < 3) {
+                            starObj.star2 += 1;
+                        }
+                        if (star >= 3 && star < 4) {
+                            starObj.star3 += 1;
+                        }
+                        if (star >= 4 && star < 5) {
+                            starObj.star4 += 1;
+                        }
+                        if (star==5) {
+                            starObj.star5 += 1;
+                        }
+                    }
+
+                    //calculate global rating
+                    // (5*252 + 4*124 + 3*40 + 2*29 + 1*33) / (252+124+40+29+33) = 4.11 and change
+                    // That's a weighted average, where you weigh each rating with the number of votes it got:
+                    globalRatings =  (starObj.star1 * 1  + starObj.star2 * 2 + starObj.star3 * 3 + starObj.star4 * 4 + starObj.star5 * 5) / (totalRatings);
+
+                }
+                delete contents[k].notes;
+                contents[k].globalRatings = globalRatings;
+            }
 
             response
                 .status(200)
@@ -261,7 +261,7 @@ const contentController = {
         console.log("====== getAllContentsForWeb  API =======");
         try {
             // get all contents
-            let contents = await ContentModel.find().lean().exec();
+            let contents = await ContentModel.find().select('-notes').lean().exec();
 
             response
                 .status(200)
@@ -287,7 +287,47 @@ const contentController = {
         try {
             // get content  by id
             let content = await ContentModel.findOne({_id: request.params.id}).lean().exec();
+            let ratings ={};
+            let starObj = {star1:0,star2:0,star3:0,star4:0,star5:0};
+            let notes = content.notes;
+            let totalRatings = notes.length;
+            let globalRatings = 0;
+            if(notes.length){
+                // calculate each star rating percentage
+                for(let i=0; i<notes.length; i++){
+                    let star = notes[i].star;
+                    if (star >= 1 && star < 2) {
+                        starObj.star1 += 1;
+                    }
+                    if (star >= 2 && star < 3) {
+                        starObj.star2 += 1;
+                    }
+                    if (star >= 3 && star < 4) {
+                        starObj.star3 += 1;
+                    }
+                    if (star >= 4 && star < 5) {
+                        starObj.star4 += 1;
+                    }
+                    if (star==5) {
+                        starObj.star5 += 1;
+                    }
+                }
+                let totalRatings = notes.length;
+                let star1percentage = starObj.star1 * 100 / totalRatings +'%';
+                let star2percentage = starObj.star2 * 100 / totalRatings +'%';
+                let star3percentage = starObj.star3 * 100 / totalRatings +'%';
+                let star4percentage = starObj.star4 * 100 / totalRatings +'%';
+                let star5percentage = starObj.star5 * 100 / totalRatings +'%';
+                ratings = {'1 star':star1percentage , '2 star':star2percentage , '3 star':star3percentage , '4 star':star4percentage, '5 star':star5percentage }
 
+                //calculate global rating
+                // (5*252 + 4*124 + 3*40 + 2*29 + 1*33) / (252+124+40+29+33) = 4.11 and change
+                // That's a weighted average, where you weigh each rating with the number of votes it got:
+                globalRatings =  (starObj.star1 * 1  + starObj.star2 * 2 + starObj.star3 * 3 + starObj.star4 * 4 + starObj.star5 * 5) / (totalRatings);
+
+            }
+            content.ratings = ratings;
+            content.globalRatings = globalRatings;
             response
                 .status(200)
                 .json({
@@ -594,33 +634,6 @@ const contentController = {
                     msg: "Favorites found successfully."
                 });
         } catch (err) {
-            console.log(err);
-            response
-                .status(500)
-                .json({msg: err});
-        }
-    },
-
-    addPosition: async(request , response) =>{
-        console.log("====== Add Position API =======");
-        // console.log("=== Body Params: ===" + (JSON.stringify(request.body.position)));
-
-        try{
-             // insert
-                await PositionModel.deleteMany();
-                let obj = {
-                    position: [request.body.position],
-                };
-                let position = new PositionModel(obj);
-                position.save();
-
-            response
-                .status(200)
-                .json({
-                    status: true,
-                    msg: "position added successfully"
-                });
-        }catch (err) {
             console.log(err);
             response
                 .status(500)

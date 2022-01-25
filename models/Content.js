@@ -43,6 +43,13 @@ const ContentSchema = new mongoose.Schema({
         fees:{
             type: Number
         },
+        notes:[
+            {
+                deviceId: { type: String },
+                feedback:{ type: String },
+                star:{ type: Number},
+                date:{type: Date, default: Date.now}
+            }],
         createdDate: {
             type: Date,
             default: Date.now,
