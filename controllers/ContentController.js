@@ -202,7 +202,7 @@ const contentController = {
         console.log("====== Contents Get All API =======");
         try {
             // get all contents
-            let contents = await ContentModel.find().select('-detail,-keyFeatures').lean().exec();
+            let contents = await ContentModel.find().lean().exec();
 
             for(let k=0; k<contents.length; k++){
                 let content = contents[k];
