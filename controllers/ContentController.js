@@ -787,6 +787,198 @@ const contentController = {
         }
     },
 
+    createWebsiteContent: async (request, response) => {
+
+        console.log("====== Content Create API =======");
+        console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
+
+        const body = JSON.parse(JSON.stringify(request.body));
+
+        try {
+            if(request.file) {
+                const file = parser.format(
+                    path.extname(request.file.originalname).toString(),
+                    request.file.buffer
+                ).content;
+                return uploader.upload(file).then((result) => {
+                    const image = result.url;
+                    console.log(image);
+                    console.log("Your image has been uploaded successfully to cloudinary");
+
+                    let contentObj;
+                    contentObj = {
+                        heading: body.heading,
+                        description: body.description,
+                        image: image,
+                    };
+                    let content = new WebsiteContentModel(contentObj);
+                    content.save();
+
+                    response
+                        .status(200)
+                        .json({
+                            msg: "web Content is successfully added"
+                        });
+                });
+            }
+
+        } catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({msg: err});
+        }
+    },
+
+    updateWebsiteContent: async (request, response) => {
+
+        console.log("====== Content Update API =======");
+        console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
+
+        const body = JSON.parse(JSON.stringify(request.body));
+        const id = request.params.id;
+        try {
+
+            if(request.file) {
+                const file = parser.format(
+                    path.extname(request.file.originalname).toString(),
+                    request.file.buffer
+                ).content;
+                return uploader.upload(file).then((result) => {
+                    const image = result.url;
+                    console.log(image);
+                    console.log("Your image has been uploaded successfully to cloudinary");
+
+                    let obj = {
+                        heading: body.heading,
+                        description: body.description,
+                        image: image
+                    }
+                    let content = WebsiteContentModel.findOneAndUpdate({_id: id}, {$set: obj}, {new: true}).then(() => {
+                        response
+                            .status(200)
+                            .json({
+                                status: true,
+                                msg: "web Content is successfully updated."
+                            });
+                    });
+                });
+            }
+            else{
+                console.log("else works");
+                let content =  await  WebsiteContentModel.findOneAndUpdate({ _id:id }, { $set: body }, { new: true });
+                response
+                    .status(200)
+                    .json({
+                        status:true,
+                        msg: "Content is successfully updated."
+                    });
+            }
+
+            // for image to save on server
+            // helper.uploadImage(request, 'image', function (image) {
+            //     let obj;
+            //     obj = {
+            //         name: body.name,
+            //         url: body.url,
+            //         games: body.games,
+            //         bonus: body.bonus,
+            //         freeSpins: body.freeSpins,
+            //         detail: body.detail
+            //     };
+            //     if (image) {
+            //         obj.image = image;
+            //     }
+            //     let content = ContentModel.findOneAndUpdate({_id: id}, {$set: obj}, {new: true}).then(() => {
+            //             response
+            //                 .status(200)
+            //                 .json({
+            //                     status: true,
+            //                     msg: "Content is successfully updated."
+            //                 });
+            //         });
+            //
+            // });
+
+        } catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({msg: err});
+        }
+    },
+
+    getAllWebsiteContents: async (request, response) => {
+
+        console.log("====== Contents Get All API =======");
+        try {
+            // get all contents
+            let contents = await WebsiteContentModel.find().select('-detail').lean().exec();
+
+            response
+                .status(200)
+                .json({
+                    status: true,
+                    contents,
+                    msg: "Contents found successfully."
+                });
+        } catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({msg: err});
+        }
+    },
+
+    getWebsiteContentById: async (request, response) => {
+
+        console.log("====== Web Content Get API =======");
+        console.log("Params");
+        console.log(request.params.id);
+
+        try {
+            // get content  by id
+            let content = await WebsiteContentModel.findOne({_id: request.params.id}).lean().exec();
+
+            response
+                .status(200)
+                .json({
+                    status: true,
+                    content,
+                    msg: "web Content found successfully."
+                });
+        } catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({msg: err});
+        }
+    },
+
+    deleteWebsiteContent: async (request, response) => {
+
+        console.log("====== web Content Delete API =======");
+        console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
+        console.log((request.body));
+
+        const body = JSON.parse(JSON.stringify(request.body));
+        try {
+
+            let content = await WebsiteContentModel.deleteOne({_id: body.id});
+            response
+                .status(200)
+                .json({
+                    status: true,
+                    msg: "web Content deleted successfully."
+                });
+        } catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({msg: err});
+        }
+    },
+
 }
 
 module.exports = contentController;

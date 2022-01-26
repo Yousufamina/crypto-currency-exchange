@@ -27,6 +27,13 @@ router.get('/getAllFavorites/:id',contentController.getAllFavorites);
 
 router.post('/addPosition',contentController.addPosition);
 
+// website content
+router.post('/createWebsiteContent',contentController.createWebsiteContent);
+router.put('/updateWebsiteContent/:id',contentController.updateWebsiteContent);
+router.get('/getAllWebsiteContents' , contentController.getAllWebsiteContents);
+router.get('/websiteContent/:id',contentController.getWebsiteContentById);
+router.post('/delete/websiteContent',contentController.deleteWebsiteContent);
+
 
 //faq
 router.post('/addFaq',faqController.addFaq);
@@ -41,11 +48,5 @@ router.put('/updateAboutUs/:id',faqController.updateAboutUs);
 router.get('/getAboutUs',faqController.getAboutUs);
 
 
-/*
-Users API
-*/
-router.get('/getAllUsers',userController.getAllUsers);
-router.post('/register',userController.createUser);
-router.post('/login',userController.login);
 
 module.exports = router;

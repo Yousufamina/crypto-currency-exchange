@@ -20,6 +20,21 @@ app.config(["$stateProvider","$urlRouterProvider","$httpProvider",function(t,e)
             templateUrl:"/js/templates/add-content.html",
             controller:'edit-content'
             })
+            .state("web-content",{
+                url:"/web-content",
+                templateUrl:"/js/templates/website-content.html",
+                controller:'websiteContents'
+            })
+            .state("add-website-content",{
+                url:"/add-website-content",
+                templateUrl:"/js/templates/add-website-content.html",
+                controller:'add-website-content'
+            })
+            .state("edit-website-content",{
+                url:"/website-content/{id}",
+                templateUrl:"/js/templates/add-website-content.html",
+                controller:'edit-website-content'
+            })
             .state("faq",{
                 url:"/faq",
                 templateUrl:"/js/templates/faq.html",
@@ -383,6 +398,146 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
             .success(function(result){
                 div.style.visibility = 'hidden';
                 $location.path( 'contents');
+                window.toastr.success(result.msg)
+            })
+            .error(function(result){
+                div.style.visibility = 'hidden';
+                window.toastr.warning(result.msg)
+            });
+    }
+
+});
+app.controller("websiteContents",function($scope,$http,$location,$localStorage){
+
+    $scope.dated = dateAndTimeFormat;
+    $scope.getData = function(){
+        $http({
+            method: "GET",
+            url: "/getAllWebsiteContents",
+        }).success(function (result) {
+            if (result.status == true) {
+                $scope.data=result.contents;
+            } else {
+                window.location.href = '/';
+            }
+        })
+
+    }
+
+    $scope.getData();
+    $scope.removingId = '';
+    $scope.removeData = function(id){
+        $scope.removingId = id;
+        $("#confirmation").modal("show")
+    }
+
+    $scope.removeConfirmed  = function(){
+        if($scope.removingId!="") {
+
+            var fd = new FormData();
+            fd.append('id',$scope.removingId);
+
+            $http.post('/delete/websiteContent', fd,{
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }).success(function(data){
+                if (data.status) {
+                    $("#"+$scope.removingId).remove();
+                    $("#confirmation").modal("hide");
+                    window.toastr.success(data.msg);
+                    $scope.getData();
+
+                }
+                else {
+                    $("#confirmation").modal("hide")
+
+                }
+            })
+        }
+
+    }
+
+});
+app.controller("add-website-content",function($scope,$http,$location,$localStorage){
+
+    $scope.heading = 'Add New Website Content';
+    $scope.content = {
+        heading:'',
+        description:'',
+        image:'',
+    }
+
+    $scope.save=function(){
+        var fd = new FormData();
+        for(var k in $scope.content){
+            if(!$scope.content[k]){
+                window.toastr.warning("Please provide "+k.toUpperCase().replace('_',' '))
+                return false;
+            }
+            fd.append(k, $scope.content[k]);
+        }
+        var div = document.getElementById('waitSpinner');
+        div.style.visibility = 'visible';
+        $http.post('/createWebsiteContent', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+            .success(function(result){
+                div.style.visibility = 'hidden';
+                $location.path('web-content');
+                window.toastr.success(result.msg)
+            })
+            .error(function(result){
+                div.style.visibility = 'hidden';
+                window.toastr.warning(result.msg)
+            });
+    }
+
+});
+app.controller("edit-website-content",function($scope,$http,$location,$localStorage,$stateParams){
+
+    $scope.heading = 'Update Content';
+    $scope.content = {
+        heading:'',
+        description:'',
+        image:''
+    }
+
+    $scope.getData = function(){
+        $http({
+            method: "GET",
+            url: "/websiteContent/"+$stateParams.id,
+        }).success(function (result) {
+            if (result.status == true) {
+                var data =result.content;
+                $scope.content.heading=data.heading;
+                $scope.content.description=data.description;
+                $scope.content.image=data.image;
+            } else {
+                window.location.href = '/';
+            }
+        });
+    }
+    $scope.getData();
+
+    $scope.save=function(){
+        var fd = new FormData();
+        for(var k in $scope.content){
+            if(!$scope.content[k]){
+                window.toastr.warning("Please provide "+k.toUpperCase().replace('_',' '))
+                return false;
+            }
+            fd.append(k, $scope.content[k]);
+        }
+        var div = document.getElementById('waitSpinner');
+        div.style.visibility = 'visible';
+        $http.put('/updateWebsiteContent/'+$stateParams.id, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+            .success(function(result){
+                div.style.visibility = 'hidden';
+                $location.path( 'web-content');
                 window.toastr.success(result.msg)
             })
             .error(function(result){
