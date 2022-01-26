@@ -160,14 +160,32 @@ const faqController={
         const id = request.params.id;
 
         try{
-            let updated = await AboutUsModel.findOneAndUpdate({_id: id}, { $set: { content:content , updatedDate:Date.now() }});
+            let aboutUsData = await AboutUsModel.findOne().exec();
+            if(aboutUsData){
+                let updated = await AboutUsModel.findOneAndUpdate({_id: id}, { $set: { content:content , updatedDate:Date.now() }});
+                response
+                    .status(200)
+                    .json({
+                        status: true,
+                        msg: "About Us  updated successfully"
+                    });
+            }
+            else{
+                // insert
+                let obj = {
+                    content: content
+                };
+                let aboutUs = new AboutUsModel(obj);
+                aboutUs.save();
 
-            response
-                .status(200)
-                .json({
-                    status: true,
-                    msg: "About Us  updated successfully"
-                });
+                response
+                    .status(200)
+                    .json({
+                        status: true,
+                        msg: "AboutUs added successfully"
+                    });
+
+            }
         }catch (err) {
             console.log(err);
             response

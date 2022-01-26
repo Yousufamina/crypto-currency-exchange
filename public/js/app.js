@@ -63,8 +63,8 @@ app.directive('fileModel', ['$parse', function ($parse) {
 }]);
 app.controller("contents",function($scope,$http,$location,$localStorage){
 
-        $scope.dated = dateAndTimeFormat;
-        $scope.getData = function(){
+    $scope.dated = dateAndTimeFormat;
+    $scope.getData = function(){
             $http({
                 method: "GET",
                 url: "/getAllContentsForWeb",
@@ -77,8 +77,29 @@ app.controller("contents",function($scope,$http,$location,$localStorage){
             })
 
         }
-
     $scope.getData();
+    $scope.alreadyexecuteRating = function(val,id, classN) {
+        console.log(val);
+        console.log(classN);
+         let className = id+' '+classN;
+        console.log(className);
+        let arr = document.getElementsByClassName(className);
+        const stars = [];
+        for(let k=0;k<5;k++){
+            stars.push(arr[k]);
+        }
+            // const stars = [...document.getElementsByClassName(className)];
+            console.log(stars);
+            const starClassActive = className+" fa fa-star";
+            // stars.map((star) => {
+            //     console.log(val);
+                    let i = val-1;
+                    for (i; i >= 0; --i) {
+                        stars[i].className = starClassActive
+                    }
+            // });
+        }
+
     $scope.removingId = '';
     $scope.removeData = function(id){
         $scope.removingId = id;
@@ -110,8 +131,34 @@ app.controller("contents",function($scope,$http,$location,$localStorage){
         }
     }
 
+    $scope.sortableOptions = {
+        stop: function(e, ui) {
+            let logEntry = [];
+            $scope.data.map(function(i,ind){
+                logEntry.push(i._id);
+            });
+
+            $scope.save=function(){
+                var fd = new FormData();
+
+                fd.append('position', logEntry);
+
+                $http.post('/addPosition', fd, {
+                    transformRequest: angular.identity,
+                    headers: {'Content-Type': undefined}
+                })
+                    .success(function(result){
+                    })
+                    .error(function(result){
+                    });
+            }();
+
+
+        }
+    };
+
 });
-app.  controller("add-content",function($scope,$http,$location,$localStorage){
+app.controller("add-content",function($scope,$http,$location,$localStorage){
 
     $scope.heading = 'Add New Content';
     $scope.content = {
@@ -157,8 +204,6 @@ app.  controller("add-content",function($scope,$http,$location,$localStorage){
     };
     $scope.alreadyexecuteRating = function() {
 
-        console.log("alreadyexecuteRating");
-
         for(let k=1; k<5; k++){
             let className = "rating__star"+k;
             const stars = [...document.getElementsByClassName(className)];
@@ -200,7 +245,6 @@ app.  controller("add-content",function($scope,$http,$location,$localStorage){
 
     $scope.save=function(){
         $scope.content.keyFeatures = CKEDITOR.instances["editor1"].getData();
-        $scope.content.easeOfUse = $scope.content.easeOfUse;
         console.log($scope.content.easeOFUse );
         console.log($scope.content.reputation );
         console.log($scope.content.depositMethods );
@@ -484,6 +528,7 @@ app.controller("aboutUs",function($scope,$http,$location,$localStorage,$statePar
         content:''
     }
     let id ;
+
     $scope.getData = function() {
         $http({
             method: "GET",
@@ -502,6 +547,7 @@ app.controller("aboutUs",function($scope,$http,$location,$localStorage,$statePar
     }
     $scope.getData();
     $scope.save=function(){
+        $scope.aboutUs.content = CKEDITOR.instances["editor1"].getData();
         var fd = new FormData();
         for(var k in $scope.aboutUs){
             if(!$scope.aboutUs[k]){

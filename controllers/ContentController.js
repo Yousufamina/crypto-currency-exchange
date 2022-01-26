@@ -21,6 +21,7 @@ const contentController = {
         try {
             // check if there is any record with same content name
             const contentByName = await ContentModel.findOne({name: body.name});
+            let positions = await PositionModel.findOne().lean().exec();
 
             if (contentByName) {
                 return response
@@ -56,6 +57,20 @@ const contentController = {
                         };
                         let content = new ContentModel(contentObj);
                         content.save();
+
+                    if(positions){
+                        let pos = positions.position[0];
+                        let posArr = pos.split(',');
+                        posArr.push(content._id);
+                        posArr = posArr.toString();
+                        PositionModel.deleteOne({},function(){
+                            let obj = {
+                                position: [posArr]
+                            };
+                            let position = new PositionModel(obj);
+                            position.save();
+                        });
+                    }
 
                         response
                             .status(200)
@@ -203,6 +218,7 @@ const contentController = {
         try {
             // get all contents
             let contents = await ContentModel.find().select('-detail,-keyFeatures').lean().exec();
+            let positions = await PositionModel.findOne().lean().exec();
 
             for(let k=0; k<contents.length; k++){
                 let content = contents[k];
@@ -258,12 +274,111 @@ const contentController = {
         }
     },
 
+    getAllContents: async (request, response) => {
+
+        console.log("====== Contents Get All API =======");
+        try {
+            // get all contents
+            let contentsData = await ContentModel.find().select('-detail,-keyFeatures').lean().exec();
+            let positions = await PositionModel.findOne().lean().exec();
+            let contents;
+            if(positions){
+                console.log("if works");
+                let pos = positions.position[0];
+                let posArr = pos.split(',');
+                let positionContents = [];
+                posArr.map(function(i,ind){
+                    for(let l=0;l<contentsData.length; l++){
+                        if(i == contentsData[l]._id){
+                            positionContents.push(contentsData[l]);
+                        }
+                    }
+                });
+                contents = positionContents;
+            }
+            else{
+                console.log("else works");
+                contents = contentsData;
+            }
+
+            for(let k=0; k<contents.length; k++){
+                let content = contents[k];
+                let starObj = {star1:0,star2:0,star3:0,star4:0,star5:0};
+                let notes = content.notes;
+                let totalRatings = notes.length;
+                let globalRatings = 0;
+                if(notes.length){
+                    // calculate each star rating percentage
+                    for(let i=0; i<notes.length; i++){
+                        let star = notes[i].star;
+                        if (star >= 1 && star < 2) {
+                            starObj.star1 += 1;
+                        }
+                        if (star >= 2 && star < 3) {
+                            starObj.star2 += 1;
+                        }
+                        if (star >= 3 && star < 4) {
+                            starObj.star3 += 1;
+                        }
+                        if (star >= 4 && star < 5) {
+                            starObj.star4 += 1;
+                        }
+                        if (star==5) {
+                            starObj.star5 += 1;
+                        }
+                    }
+
+                    //calculate global rating
+                    // (5*252 + 4*124 + 3*40 + 2*29 + 1*33) / (252+124+40+29+33) = 4.11 and change
+                    // That's a weighted average, where you weigh each rating with the number of votes it got:
+                    globalRatings =  (starObj.star1 * 1  + starObj.star2 * 2 + starObj.star3 * 3 + starObj.star4 * 4 + starObj.star5 * 5) / (totalRatings);
+
+                }
+                delete contents[k].notes;
+                contents[k].globalRatings = globalRatings;
+            }
+
+            response
+                .status(200)
+                .json({
+                    status: true,
+                    contents,
+                    msg: "Contents found successfully."
+                });
+        } catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({msg: err});
+        }
+    },
+
     getAllContentsForWeb: async (request, response) => {
 
         console.log("====== getAllContentsForWeb  API =======");
         try {
             // get all contents
-            let contents = await ContentModel.find().select('-notes').lean().exec();
+            let contentsData = await ContentModel.find().select('-notes').lean().exec();
+            let positions = await PositionModel.findOne().lean().exec();
+            let contents;
+            if(positions){
+                console.log("if works");
+                let pos = positions.position[0];
+                let posArr = pos.split(',')
+                let positionContents = [];
+                posArr.map(function(i,ind){
+                    for(let l=0;l<contentsData.length; l++){
+                        if(i == contentsData[l]._id){
+                            positionContents.push(contentsData[l]);
+                        }
+                    }
+                });
+                contents = positionContents;
+            }
+            else{
+                console.log("else works");
+                contents = contentsData;
+            }
 
             response
                 .status(200)
@@ -638,6 +753,33 @@ const contentController = {
                     msg: "Favorites found successfully."
                 });
         } catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({msg: err});
+        }
+    },
+
+    addPosition: async(request , response) =>{
+        console.log("====== Add Position API =======");
+        // console.log("=== Body Params: ===" + (JSON.stringify(request.body.position)));
+
+        try{
+            // insert
+            await PositionModel.deleteMany();
+            let obj = {
+                position: [request.body.position],
+            };
+            let position = new PositionModel(obj);
+            position.save();
+
+            response
+                .status(200)
+                .json({
+                    status: true,
+                    msg: "position added successfully"
+                });
+        }catch (err) {
             console.log(err);
             response
                 .status(500)

@@ -25,6 +25,8 @@ router.post('/addFavorite',contentController.addFavorite);
 router.post('/removeFavorite',contentController.removeFavorite);
 router.get('/getAllFavorites/:id',contentController.getAllFavorites);
 
+router.post('/addPosition',contentController.addPosition);
+
 
 //faq
 router.post('/addFaq',faqController.addFaq);

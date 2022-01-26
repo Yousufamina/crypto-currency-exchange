@@ -1,3 +1,11 @@
+<style>
+    .rating__star1_easeOfUse,.rating__star2_reputation, .rating__star3_depositMethods, .rating__star4_fees  {
+        cursor: pointer;
+        color: #dabd18b2;
+    }
+
+</style>
+
 
     <div class="ms-panel">
         <div class="ms-panel-header new"><h6>Contents</h6>
@@ -28,8 +36,8 @@
                         <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr  ng-if="data.length" id="{{content.id}}" ng-repeat="content in data" >
+                    <tbody ui-sortable="sortableOptions" ng-model="data">
+                    <tr ng-if="data.length" id="{{content.id}}" ng-repeat="content in data">
                         <td>{{$index+1}}</td>
                         <td>{{content.name}}</td>
                         <td>{{content.url}}</td>
@@ -37,10 +45,46 @@
                         <td>{{content.country}}</td>
                         <td>{{content.currency}}</td>
                         <td>{{content.promotion}}</td>
-                        <td>{{content.easeOfUse}}</td>
-                        <td>{{content.reputation}}</td>
-                        <td>{{content.depositMethods}}</td>
-                        <td>{{content.fees}}</td>
+                        <td>
+                            <div class="{{content._id}}">
+                            <span class="{{content._id}} rating__star1_easeOfUse fa fa-star-o"></span>
+                            <span class="{{content._id}} rating__star1_easeOfUse fa fa-star-o"></span>
+                            <span class="{{content._id}} rating__star1_easeOfUse fa fa-star-o"></span>
+                            <span class="{{content._id}} rating__star1_easeOfUse fa fa-star-o"></span>
+                            <span class="{{content._id}} rating__star1_easeOfUse fa fa-star-o"></span>
+                        </div>
+                            {{alreadyexecuteRating(content.easeOfUse ,content._id, 'rating__star1_easeOfUse')}}
+                        </td>
+                        <td>
+                            <div class="{{content._id}}">
+                                <span class="{{content._id}} rating__star2_reputation fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star2_reputation fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star2_reputation fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star2_reputation fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star2_reputation fa fa-star-o"></span>
+                            </div>
+                            {{alreadyexecuteRating(content.reputation , content._id,'rating__star2_reputation')}}
+                        </td>
+                        <td>
+                            <div class="{{content._id}}">
+                                <span class="{{content._id}} rating__star3_depositMethods fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star3_depositMethods fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star3_depositMethods fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star3_depositMethods fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star3_depositMethods fa fa-star-o"></span>
+                            </div>
+                            {{alreadyexecuteRating(content.depositMethods ,content._id,'rating__star3_depositMethods')}}
+                        </td>
+                        <td>
+                            <div class="{{content._id}}">
+                                <span class="{{content._id}} rating__star4_fees fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star4_fees fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star4_fees fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star4_fees fa fa-star-o"></span>
+                                <span class="{{content._id}} rating__star4_fees fa fa-star-o"></span>
+                            </div>
+                            {{alreadyexecuteRating(content.fees , content._id,'rating__star4_fees')}}
+                        </td>
                         <td>{{content.detail}}</td>
                         <td>{{content.keyFeatures}}</td>
                         <td>{{dated(content.createdDate)}}</td>
