@@ -13,6 +13,9 @@ const ContentSchema = new mongoose.Schema({
         tradingFees:{
             type: String
         },
+        assets: {
+            type: String
+        },
         country: {
             type: String
         },
