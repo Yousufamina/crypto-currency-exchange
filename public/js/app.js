@@ -310,7 +310,6 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
         detail:'',
         keyFeatures:''
     }
-    CKEDITOR.replace( 'editor1' );
 
     $scope.alreadyexecuteRating = function() {
 
@@ -365,6 +364,7 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
                 $scope.content.name=data.name;
                 $scope.content.url=data.url;
                 $scope.content.tradingFees =data.tradingFees;
+                $scope.content.assets =data.assets;
                 $scope.content.country=data.country;
                 $scope.content.currency = data.currency;
                 $scope.content.promotion = data.promotion;
@@ -375,6 +375,10 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
                 $scope.content.image = data.image;
                 $scope.content.detail = data.detail;
                 $scope.content.keyFeatures = data.keyFeatures;
+
+                CKEDITOR.replace( 'editor1' );
+                CKEDITOR.instances["editor1"].setData($scope.content.keyFeatures);
+
             } else {
                 window.location.href = '/';
             }
