@@ -41,6 +41,10 @@ app.use((err, req, res, next) => {
 });
 
 
+app.get("/", (req, res) => {
+    res.send("Server is up and running");
+});
+
 app.use('/', api);
 app.use('/admin', admin);
 

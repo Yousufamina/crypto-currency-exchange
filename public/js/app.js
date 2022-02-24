@@ -311,9 +311,31 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
         keyFeatures:''
     }
 
-    $scope.alreadyexecuteRating = function() {
+    $scope.executeRating = function(className) {
+        console.log("III");
+        console.log(className);
 
-        console.log("alreadyexecuteRating");
+        const stars = [...document.getElementsByClassName(className)];
+        const starClassActive = className+" fa fa-star";
+        const starClassInactive = className+ " fa fa-star-o";
+        const starsLength = stars.length;
+        let i;
+        stars.map((star) => {
+            star.onclick = () => {
+                i = stars.indexOf(star);
+                $scope.content.easeOFUse = i+1;
+                console.log(i);
+                let ind = i+1;
+                console.log(className + ind);
+                if (star.className === starClassInactive) {
+                    for (i; i >= 0; --i) stars[i].className = starClassActive;
+                } else {
+                    for (i; i < starsLength; ++i) stars[i].className = starClassInactive;
+                }
+            };
+        });
+    };
+    $scope.alreadyexecuteRating = function() {
 
         for(let k=1; k<5; k++){
             let className = "rating__star"+k;
@@ -758,7 +780,7 @@ function dateAndTimeFormat(date){
     if(min<10){
         min = '0'+min;
     }
-    return date.getFullYear()+"-"+month+"-"+day +"" + hours+":"+min +' ' + newformat;; ;
+    return date.getFullYear()+"-"+month+"-"+day +"  " + hours+":"+min +' ' + newformat;
 }
 function dateFormat(date){
     date = new Date(date)

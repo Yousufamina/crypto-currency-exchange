@@ -31,16 +31,9 @@ const contentController = {
             }
 
             if(request.file) {
-                const file = parser.format(
-                    path.extname(request.file.originalname).toString(),
-                    request.file.buffer
-                ).content;
-                return uploader.upload(file).then((result) => {
-                    const image = result.url;
-                    console.log(image);
-                    console.log("Your image has been uploaded successfully to cloudinary");
+                helper.uploadImage(request, 'image', function (image) {
 
-                    let contentObj;
+                let contentObj;
                         contentObj = {
                             name: body.name,
                             url: body.url,
@@ -81,35 +74,6 @@ const contentController = {
                             });
                         });
             }
-              // for server
-            // helper.uploadImage(request, 'image', function (image) {
-            //
-            //     let contentObj;
-            //     contentObj = {
-//                             name: body.name,
-//                             url: body.url,
-//                             tradingFees: body.tradingFees,
-//                             country: body.country,
-//                             currency: body.currency,
-//                             promotion: body.promotion,
-//                             image: image,
-//                             detail: body.detail,
-//                             keyFeatures: body.keyFeatures,
-//                             easeOfUse: body.easeOfUse,
-//                             reputation: body.reputation,
-//                             depositMethods: body.depositMethods,
-//                             fees: body.fees,
-//                         };
-            //     let content = new ContentModel(contentObj);
-            //     content.save();
-
-            //     response
-            //         .status(200)
-            //         .json({
-            //             msg: "Content is successfully added"
-            //         });
-            //     });
-
 
         } catch (err) {
             console.log(err);
@@ -207,68 +171,6 @@ const contentController = {
             //
             // });
 
-        } catch (err) {
-            console.log(err);
-            response
-                .status(500)
-                .json({msg: err});
-        }
-    },
-
-    getAllContents: async (request, response) => {
-
-        console.log("====== Contents Get All API =======");
-        try {
-            // get all contents
-            let contents = await ContentModel.find().select('-detail,-keyFeatures').lean().exec();
-            let positions = await PositionModel.findOne().lean().exec();
-
-            for(let k=0; k<contents.length; k++){
-                let content = contents[k];
-                let starObj = {star1:0,star2:0,star3:0,star4:0,star5:0};
-                let globalRatings = 0;
-                if(content.notes){
-                    let notes = content.notes;
-                    let totalRatings = notes.length;
-                    if(notes.length){
-                        // calculate each star rating percentage
-                        for(let i=0; i<notes.length; i++){
-                            let star = notes[i].star;
-                            if (star >= 1 && star < 2) {
-                                starObj.star1 += 1;
-                            }
-                            if (star >= 2 && star < 3) {
-                                starObj.star2 += 1;
-                            }
-                            if (star >= 3 && star < 4) {
-                                starObj.star3 += 1;
-                            }
-                            if (star >= 4 && star < 5) {
-                                starObj.star4 += 1;
-                            }
-                            if (star==5) {
-                                starObj.star5 += 1;
-                            }
-                        }
-
-                        //calculate global rating
-                        // (5*252 + 4*124 + 3*40 + 2*29 + 1*33) / (252+124+40+29+33) = 4.11 and change
-                        // That's a weighted average, where you weigh each rating with the number of votes it got:
-                        globalRatings =  (starObj.star1 * 1  + starObj.star2 * 2 + starObj.star3 * 3 + starObj.star4 * 4 + starObj.star5 * 5) / (totalRatings);
-
-                    }
-                    delete contents[k].notes;
-                }
-                contents[k].globalRatings = globalRatings;
-            }
-
-            response
-                .status(200)
-                .json({
-                    status: true,
-                    contents,
-                    msg: "Contents found successfully."
-                });
         } catch (err) {
             console.log(err);
             response
