@@ -28,11 +28,11 @@ router.get('/getAllFavorites/:id',contentController.getAllFavorites);
 router.post('/addPosition',contentController.addPosition);
 
 // website content
-router.post('/createWebsiteContent',contentController.createWebsiteContent);
-router.put('/updateWebsiteContent/:id',contentController.updateWebsiteContent);
-router.get('/getAllWebsiteContents' , contentController.getAllWebsiteContents);
-router.get('/websiteContent/:id',contentController.getWebsiteContentById);
-router.post('/delete/websiteContent',contentController.deleteWebsiteContent);
+// router.post('/createWebsiteContent',contentController.createWebsiteContent);
+// router.put('/updateWebsiteContent/:id',contentController.updateWebsiteContent);
+// router.get('/getAllWebsiteContents' , contentController.getAllWebsiteContents);
+// router.get('/websiteContent/:id',contentController.getWebsiteContentById);
+// router.post('/delete/websiteContent',contentController.deleteWebsiteContent);
 
 
 //faq

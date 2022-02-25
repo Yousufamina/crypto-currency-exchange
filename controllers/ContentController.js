@@ -30,7 +30,7 @@ const contentController = {
                     .json({msg: "Content with this name already exists"});
             }
 
-            if(request.file) {
+            if(request.files) {
                 helper.uploadImage(request, 'image', function (image) {
 
                 let contentObj;
@@ -99,7 +99,8 @@ const contentController = {
                     .json({msg: "Content with this name already exists"});
             }
 
-            if(request.file) {
+            if(request.files) {
+                console.log("if works");
                 helper.uploadImage(request, 'image', function (image) {
 
                     let obj = {

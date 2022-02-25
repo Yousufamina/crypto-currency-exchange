@@ -20,21 +20,6 @@ app.config(["$stateProvider","$urlRouterProvider","$httpProvider",function(t,e)
             templateUrl:"/js/templates/add-content.html",
             controller:'edit-content'
             })
-            .state("web-content",{
-                url:"/web-content",
-                templateUrl:"/js/templates/website-content.html",
-                controller:'websiteContents'
-            })
-            .state("add-website-content",{
-                url:"/add-website-content",
-                templateUrl:"/js/templates/add-website-content.html",
-                controller:'add-website-content'
-            })
-            .state("edit-website-content",{
-                url:"/website-content/{id}",
-                templateUrl:"/js/templates/add-website-content.html",
-                controller:'edit-website-content'
-            })
             .state("faq",{
                 url:"/faq",
                 templateUrl:"/js/templates/faq.html",
