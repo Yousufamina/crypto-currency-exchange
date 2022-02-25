@@ -100,14 +100,7 @@ const contentController = {
             }
 
             if(request.file) {
-                const file = parser.format(
-                    path.extname(request.file.originalname).toString(),
-                    request.file.buffer
-                ).content;
-                return uploader.upload(file).then((result) => {
-                    const image = result.url;
-                    console.log(image);
-                    console.log("Your image has been uploaded successfully to cloudinary");
+                helper.uploadImage(request, 'image', function (image) {
 
                     let obj = {
                         name: body.name,

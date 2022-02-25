@@ -29,11 +29,11 @@ const helper = {
             }
             if (image) {
                 let fileName = new Date().getTime() + "." + image.originalname.split('.').pop();
-                fileImg = 'https://canadianonlinecasino.io/casino/public/images/' + image.filename +fileName;
+                fileImg = '/images/' + image.filename +fileName;
                 console.log(image.path+fileName);
                 console.log("fileImg");
                 console.log(fileImg);
-                fs.rename(fileImg, fileImg, function (err) {
+                fs.rename(image.path, image.path + fileName, function (err) {
                     if (err) {
                         console.log(err);
                         callBack(false);
@@ -47,7 +47,7 @@ const helper = {
                 callBack(false);
             }
         }
-    },
+    }
 
     // forgotPassword(user, server, key) {
     //
@@ -85,3 +85,4 @@ const helper = {
 }
 
 module.exports = helper;
+  
