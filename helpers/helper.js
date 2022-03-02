@@ -62,7 +62,6 @@ const helper = {
     forgotPassword(user, server, key,email) {
 
         readHTMLFile('./public/template/forgotPassword.html', function (err, html) {
-console.log(email)
             var template = handlebars.compile(html);
             var replacements = {
                 username: user.name,
@@ -74,10 +73,10 @@ console.log(email)
 
             // setup e-mail data with unicode symbols
             const mailOptions = {
-                from: 'cryptotrade.click@gmail.com', // sender address
-                to: 'aminayousuf02@gmail.com', // list of receivers
+                from: '"Crypto Trade Support" <cryptotrade.click@gmail.com>', // sender address
+                to: email, // list of receivers
                 subject: 'Change Password Email', // Subject line
-                text: htmlToSend, // plaintext body
+                text: '', // plaintext body
                 html: htmlToSend // html body
             };
 
