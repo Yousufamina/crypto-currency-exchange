@@ -12,12 +12,12 @@ router.get('/login', adminController.login);
 router.get('/',middleware.admin ,adminController.index);
 router.post('/login',adminController.loginPost);
 router.get('/logout',adminController.logout);
-router.post('/forgotPassword',adminController.forgotPassword);
-router.post('/changePassword/:id/:key',adminController.changePassword);
+router.get('/sendChangePasswordRequest',adminController.changePassword);
+router.get('/changePassword',adminController.showChangePassword);
+router.post('/changePassword',adminController.updatePassword);
 
 // create Admin User
 router.post('/createAdminUser', userController.createUser);
-
 
 
 module.exports = router;

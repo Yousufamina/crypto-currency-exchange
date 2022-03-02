@@ -100,7 +100,6 @@ const contentController = {
             }
 
             if(request.files) {
-                console.log("if works");
                 helper.uploadImage(request, 'image', function (image) {
 
                     let obj = {
