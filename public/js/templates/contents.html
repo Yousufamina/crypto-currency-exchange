@@ -33,6 +33,7 @@
                         <th>Detail</th>
                         <th>Key Features</th>
                         <th>Date</th>
+                        <th>Feedback</th>
                         <th>Image</th>
                         <th>Actions</th>
                     </tr>
@@ -90,6 +91,9 @@
                         <td>{{content.detail}}</td>
                         <td>{{content.keyFeatures}}</td>
                         <td>{{dated(content.createdDate)}}</td>
+                        <td>
+                            <a href="#showFeedback/{{content._id}}">Show Feedback</a>
+                        </td>
                         <td><img class="imagePreviewModal" src="{{content.image}}" width="100" alt="logo"/></td>
                         <td>
                             <a ng-click="removeData(content._id)" ><i class="fa fa-trash"></i> </a><br/>
