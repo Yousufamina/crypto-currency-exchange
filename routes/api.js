@@ -20,6 +20,8 @@ router.post('/updateNotes',contentController.editNotesByContentId);
 router.post('/viewNotesByContentId',contentController.viewNotesByContentId);
 router.post('/viewAllNotes',contentController.viewAllNotes);
 router.post('/deleteNotes' ,contentController.deleteNotes);
+router.post('/delete/notes',contentController.deleteNotesById);
+
 
 router.post('/addFavorite',contentController.addFavorite);
 router.post('/removeFavorite',contentController.removeFavorite);

@@ -507,7 +507,6 @@ const contentController = {
         console.log("====== Notes Delete API =======");
         console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
         const {deviceId , contentId} = request.body;
-
         try {
               // edit content notes by id
             let updated = await ContentModel.findOneAndUpdate({ "_id": contentId},
@@ -516,7 +515,30 @@ const contentController = {
                 .status(200)
                 .json({
                     status: true,
-                    msg: "Content Notes deleted successfully."
+                    msg: "Feedback deleted successfully."
+                });
+        } catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({msg: err});
+        }
+    },
+
+    deleteNotesById: async (request , response) =>{
+
+        console.log("====== Notes DeleteBy Id  API =======");
+        console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
+        const {id , contentId} = request.body;
+        try {
+              // edit content notes by id
+            let updated = await ContentModel.findOneAndUpdate({ "_id": contentId},
+                { $pull: {notes:{ "_id" : id}} } );
+            response
+                .status(200)
+                .json({
+                    status: true,
+                    msg: "Feedback deleted successfully."
                 });
         } catch (err) {
             console.log(err);

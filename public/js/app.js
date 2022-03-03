@@ -40,7 +40,11 @@ app.config(["$stateProvider","$urlRouterProvider","$httpProvider",function(t,e)
                 templateUrl:"/js/templates/aboutUs.html",
                 controller:'aboutUs'
             })
-
+            .state("showFeedback",{
+                url:"/showFeedback/{id}",
+                templateUrl:"/js/templates/showFeedback.html",
+                controller:'showFeedback'
+            })
 
 }]);
 app.directive('fileModel', ['$parse', function ($parse) {
@@ -740,6 +744,74 @@ app.controller("aboutUs",function($scope,$http,$location,$localStorage,$statePar
     }
 
 });
+app.controller("showFeedback",function($scope,$http,$location,$localStorage,$stateParams){
+
+    $scope.heading = 'Feedback';
+    $scope.dated = dateAndTimeFormat;
+
+    $scope.alreadyexecuteRating = function(val,id, classN) {
+
+        let className = id+' '+classN;
+        let arr = document.getElementsByClassName(className);
+        const stars = [];
+        for(let k=0;k<5;k++){
+            stars.push(arr[k]);
+        }
+        const starClassActive = className+" fa fa-star";
+        let i = val-1;
+        for (i; i >= 0; --i) {
+            stars[i].className = starClassActive
+        }
+    }
+
+    $scope.getData = function(){
+        $http({
+            method: "GET",
+            url: "/content/"+$stateParams.id,
+        }).success(function (result) {
+            if (result.status == true) {
+                var data =result.content;
+                $scope.notes=data.notes;
+            } else {
+                window.location.href = '/';
+            }
+        });
+    }
+    $scope.getData();
+
+    $scope.removingId = '';
+    $scope.removeData = function(id){
+        $scope.removingId = id;
+        $("#confirmation").modal("show")
+    }
+
+    $scope.removeConfirmed  = function(){
+        if($scope.removingId!="") {
+
+            var fd = new FormData();
+            fd.append('id',$scope.removingId);
+            fd.append('contentId',$stateParams.id);
+
+            $http.post('/delete/notes', fd,{
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }).success(function(data){
+                if (data.status) {
+                    $("#"+$scope.removingId).remove();
+                    $("#confirmation").modal("hide");
+                    window.toastr.success(data.msg);
+                    $scope.getData();
+                }
+                else {
+                    $("#confirmation").modal("hide")
+
+                }
+            })
+        }
+    }
+
+});
+
 
 function dateAndTimeFormat(date){
     date = new Date(date)
@@ -782,8 +854,6 @@ function dateFormat(date){
     return date.getFullYear()+"-"+month+"-"+day ;
 }
 function showMessage(){
-    console.log("called func")
-
     $.ajax({
         url: 'admin/sendChangePasswordRequest',
         type: 'get',

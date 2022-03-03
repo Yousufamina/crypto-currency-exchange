@@ -1,0 +1,58 @@
+<style>
+    .rating__star {
+        cursor: pointer;
+        color: #dabd18b2;
+    }
+
+</style>
+
+<div class="row">
+    <div class="card-body">
+        <ul class="todo-list" data-widget="todo-list" ng-if="notes.length"  ng-repeat="note in notes">
+            <li>
+                <span class="text">{{note.feedback}}</span>
+                <div class="tools">
+                    <span>{{dated(note.date)}}</span>
+                    <a ng-click="removeData(note._id)"><i class="fa fa-trash"></i></a>
+                </div>
+                <div class="{{note._id}}">
+                    <span class="{{note._id}} rating__star fa fa-star-o"></span>
+                    <span class="{{note._id}} rating__star fa fa-star-o"></span>
+                    <span class="{{note._id}} rating__star fa fa-star-o"></span>
+                    <span class="{{note._id}} rating__star fa fa-star-o"></span>
+                    <span class="{{note._id}} rating__star fa fa-star-o"></span>
+                </div>
+                {{alreadyexecuteRating(note.star , note._id,'rating__star')}}
+            </li>
+        </br>
+        </ul>
+
+        <ul class="todo-list" data-widget="todo-list" ng-if="notes.length==0">
+            <li ng-if="notes.length==0">
+                <span class="text">No Feedback added</span>
+            </li>
+            </br>
+        </ul>
+
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" id="confirmation" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <label style="color:#3c3c3c" >Are you sure ! you want to delete?</label>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" ng-click="removeConfirmed()" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
