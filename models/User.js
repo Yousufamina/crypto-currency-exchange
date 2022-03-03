@@ -28,6 +28,9 @@ const UsersSchema = new mongoose.Schema({
             type: String,
             default: "Active",
         },
+        key:{
+            type: String
+        }
     },
 );
 

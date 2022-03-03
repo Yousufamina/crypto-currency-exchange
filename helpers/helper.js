@@ -1,17 +1,27 @@
-const nodemailer = require('nodemailer');
-// var handlebars = require('handlebars');
 var fs = require('fs');
-// var pdf = require('html-pdf');
+const nodemailer = require('nodemailer');
+var handlebars = require('handlebars');
 
-// const csv = require('csv-parser')
 
 var transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-        user: "healthcareproviderlab@gmail.com",
-        pass: "HealthcareProvidersLab@1234"
+        user: "cryptotrade.click@gmail.com",
+        pass: "cryptotrade.click123"
     }
 });
+
+var readHTMLFile = function (path, callback) {
+    fs.readFile(path, { encoding: 'utf-8' }, function (err, html) {
+        if (err) {
+            throw err;
+            callback(err);
+        }
+        else {
+            callback(null, html);
+        }
+    });
+};
 
 const helper = {
 
@@ -47,40 +57,40 @@ const helper = {
                 callBack(false);
             }
         }
-    }
+    },
 
-    // forgotPassword(user, server, key) {
-    //
-    //     readHTMLFile('./public/template/forgotPassword.html', function (err, html) {
-    //
-    //         var template = handlebars.compile(html);
-    //         var replacements = {
-    //             username: user.fullname,
-    //             server: server,
-    //             key: key,
-    //             id: user._id
-    //         }
-    //         var htmlToSend = template(replacements);
-    //
-    //         // setup e-mail data with unicode symbols
-    //         const mailOptions = {
-    //             from: '"HealthCare Providers Laboratory Support" <healthcareproviderlab@gmail.com>', // sender address
-    //             to: user.email, // list of receivers
-    //             subject: 'Forgot Password Email', // Subject line
-    //             text: '', // plaintext body
-    //             html: htmlToSend // html body
-    //         };
-    //
-    //         // send mail with defined transport object
-    //         transporter.sendMail(mailOptions, (error, info) => {
-    //             if (error) {
-    //                 return console.log(error);
-    //             }
-    //             console.log(`Message sent: ${info.response}`);
-    //         });
-    //     });
-    //
-    // },
+    forgotPassword(user, server, key,email) {
+
+        readHTMLFile('./public/template/forgotPassword.html', function (err, html) {
+            var template = handlebars.compile(html);
+            var replacements = {
+                username: user.name,
+                server: server,
+                key: key,
+                id: user._id
+            }
+            var htmlToSend = template(replacements);
+
+            // setup e-mail data with unicode symbols
+            const mailOptions = {
+                from: '"Crypto Trade Support" <cryptotrade.click@gmail.com>', // sender address
+                to: email, // list of receivers
+                subject: 'Change Password Email', // Subject line
+                text: htmlToSend, // plaintext body
+                html: htmlToSend // html body
+            };
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return console.log(error);
+                }
+                console.log(info);
+                console.log(`Message sent: ${info.response}`);
+            });
+        });
+
+    },
 
 }
 

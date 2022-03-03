@@ -41,6 +41,7 @@ app.config(["$stateProvider","$urlRouterProvider","$httpProvider",function(t,e)
                 controller:'aboutUs'
             })
 
+
 }]);
 app.directive('fileModel', ['$parse', function ($parse) {
     return {
@@ -779,4 +780,16 @@ function dateFormat(date){
     }
 
     return date.getFullYear()+"-"+month+"-"+day ;
+}
+function showMessage(){
+    console.log("called func")
+
+    $.ajax({
+        url: 'admin/sendChangePasswordRequest',
+        type: 'get',
+        success:function(result){
+            window.toastr.success(result.msg);
+        }
+    });
+
 }

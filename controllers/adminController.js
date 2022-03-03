@@ -1,5 +1,6 @@
-
 const UserModel = require("../models/User");
+const helper = require("../helpers/helper");
+const CONSTANT =  require("../config/constants");
 const bcrypt = require("bcryptjs");
 
 const adminController = {
@@ -31,6 +32,7 @@ const adminController = {
                 if (user) {
                     const isMatch = await bcrypt.compare(body.password, user.password);
                     if (isMatch) {
+                        console.log("match")
                         req.session.user = user;
                         res.redirect("/admin")
                     } else {
@@ -59,34 +61,31 @@ const adminController = {
 
     },
 
-    forgotPassword: async (request, response) => {
-
-        console.log("======  Forgot Password API =======");
-        console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
-
+    changePassword: async (request, response) => {
+        console.log("======  Change Password API =======");
         try {
-            const body = JSON.parse(JSON.stringify(request.body));
-            let user = await EmployeeModel.findOne({ email: body.email });
+            let user = await UserModel.findOne({ email: 'admin@admin.com' });
             if (user) {
                 // send email
                 const key = new Date().getTime();
 
-                await EmployeeModel.updateOne({ "_id": user._id }, {
+                await UserModel.updateOne({ "_id": user._id }, {
                     $set: {
                         "key": key
                     }
                 });
                 const server = CONSTANT.domainUrl;
+                const email = CONSTANT.adminEmail;
 
-                await helper.forgotPassword(user, server, key);
+                await helper.forgotPassword(user, server, key, email);
                 response
                     .status(200)
-                    .json({ msg: "You will received email shortly" });
+                    .json({ status : true , msg: "You will received email shortly for change password link" });
             }
             else {
                 response
                     .status(400)
-                    .json({ msg: "Invalid email address" });
+                    .json({ status : false , msg: "Invalid email address" });
             }
         }
         catch (err) {
@@ -97,25 +96,69 @@ const adminController = {
         }
     },
 
-    changePassword: async (request, response) => {
+    showChangePassword: async (request,response) =>{
 
-        console.log("======  Forgot Password API =======");
-        // console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
+        console.log("======= Show Change Password API =========");
+        console.log(request.query);
+        try {
+            // check key in db
+            let user = await UserModel.findOne({ _id: request.query.u });
+
+            if (user) {
+                if (user.key == request.query.k) {
+                    // check logic
+                    let NowDate = new Date().getTime();
+                    let linkDate = request.query.k;
+                    let diff = (NowDate - linkDate) / 1000;
+                    diff /= (60 * 60);
+                    if (diff > 2) {
+                        console.log("Link has expired");
+                        response.render('changePassword',{status:false,msg:"Link has expired"})
+                    }
+                    else {
+                        response.render('changePassword',{status:true,msg:""})
+                    }
+                }
+                else {
+                    console.log("Link has expired");
+                    response.render('changePassword',{status:false,msg:"Invalid request or link has expired"})
+                }
+            }
+            else {
+                console.log("invalid user || user id not found");
+                response.render('changePassword',{status:false,msg:"Invalid request"})
+
+            }
+        }
+        catch (err) {
+            console.log(err);
+            response
+                .status(500)
+                .json({ msg: err });
+        }
+
+
+    },
+
+    updatePassword: async (request, response) => {
+
+        console.log("======  Update Password API =======");
+        console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
 
         try {
             const body = JSON.parse(JSON.stringify(request.body));
-            if (body.password == body.confirm_password) {
+            if (body.password == body.confirmPassword) {
 
                 // check key in db
-                let user = await EmployeeModel.findOne({ _id: request.params.id });
+                let user = await UserModel.findOne({ _id: body.userId });
 
                 if (user) {
-                    if (user.key == request.params.key) {
+                    if (user.key == body.key) {
                         // check logic
                         const salt = await bcrypt.genSalt(10);
                         const password = await bcrypt.hash(body.password, salt);
                         let NowDate = new Date().getTime();
-                        let linkDate = request.params.key;
+                        let linkDate = body.key;
                         let diff = (NowDate - linkDate) / 1000;
                         diff /= (60 * 60);
                         if (diff > 2) {
@@ -123,31 +166,28 @@ const adminController = {
                             response
                                 .status(400)
                                 .json({ msg: "Invalid request or link has expired" });
+                            response.render('changePassword',{status:false, msg:"Invalid request or link has expired"})
+
                         }
                         else {
                             // update password
-                            await EmployeeModel.updateOne({ "_id": request.params.id }, {
+                            await UserModel.updateOne({ "_id": body.userId }, {
                                 $set: {
                                     "password": password, key: ''
                                 }
                             });
-                            response
-                                .status(200)
-                                .json({ msg: "Password has changed successfully" });
+                            response.render('changePassword',{status:true,msg:"Password has changed successfully"})
+
                         }
                     }
                     else {
                         console.log("Link has expired");
-                        response
-                            .status(400)
-                            .json({ msg: "Invalid request or link has expired" });
+                        response.render('changePassword',{status:false, msg:"Invalid request or link has expired"})
                     }
                 }
                 else {
                     console.log("invalid user || user id not found");
-                    response
-                        .status(400)
-                        .json({ msg: "Invalid request" });
+                    response.render('changePassword',{status:false, msg:"Invalid request"})
                 }
             }
         }

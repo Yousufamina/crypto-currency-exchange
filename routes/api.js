@@ -48,5 +48,4 @@ router.put('/updateAboutUs/:id',faqController.updateAboutUs);
 router.get('/getAboutUs',faqController.getAboutUs);
 
 
-
 module.exports = router;
