@@ -750,7 +750,7 @@ app.controller("showFeedback",function($scope,$http,$location,$localStorage,$sta
     $scope.dated = dateAndTimeFormat;
 
     $scope.alreadyexecuteRating = function(val,id, classN) {
-
+          val = Math.round(val);
         let className = id+' '+classN;
         let arr = document.getElementsByClassName(className);
         const stars = [];
