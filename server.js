@@ -7,6 +7,10 @@ const session = require("express-session");
 const multer =  require("multer");
 const port = process.env.PORT || 4000;
 const app = express();
+const fs = require('fs');
+const https = require('https');
+
+
 // const { uploader, cloudinaryConfig } = require("./config/cloudinaryConfig");
 
 // const multer = require("multer");
@@ -50,6 +54,12 @@ app.use('/', api);
 app.use('/admin', admin);
 
 
-app.listen(port, () => {
-    console.log("SERVER Listening at port : " + port);
+const httpsServer = https.createServer({
+    key: fs.readFileSync('/etc/letsencrypt/live/canadianonlinecasino.io/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/canadianonlinecasino.io/fullchain.pem'),
+}, app);
+
+httpsServer.listen(port, () => {
+    console.log("Crypto Currency HTTPS SERVER Listening at port : " + port);
 });
+
