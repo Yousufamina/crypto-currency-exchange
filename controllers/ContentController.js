@@ -177,7 +177,9 @@ const contentController = {
         console.log("====== Contents Get All API =======");
         try {
             // get all contents
-            let contentsData = await ContentModel.find().select('-detail,-keyFeatures').lean().exec();
+             console.log(request.query.country);
+            let string = request.query.country;
+            let contentsData = await ContentModel.find({ country: { $regex: string, $options: "i" }}).select('-detail,-keyFeatures').lean().exec();
             let positions = await PositionModel.findOne().lean().exec();
             let contents;
             if(positions){

@@ -55,8 +55,8 @@ app.use('/admin', admin);
 
 
 const httpsServer = https.createServer({
-    key: fs.readFileSync('/etc/letsencrypt/live/canadianonlinecasino.io/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/canadianonlinecasino.io/fullchain.pem'),
+    key: fs.readFileSync('/etc/letsencrypt/live/gogamble.app/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/gogamble.app/fullchain.pem'),
 }, app);
 
 httpsServer.listen(port, () => {
