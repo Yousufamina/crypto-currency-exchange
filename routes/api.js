@@ -4,13 +4,15 @@ const auth = require("../middleware/auth");
 const contentController = require("../controllers/ContentController");
 const userController = require("../controllers/UsersController");
 const faqController = require("../controllers/FaqController");
+const countryController = require("../controllers/CountryController");
+
 
 /*
 Contents API
 */
 router.post('/createContent',contentController.createContent);
 router.put('/updateContent/:id',contentController.updateContent);
-router.get('/getAllContents' , contentController.getAllContents);+
+router.get('/getAllContents' , contentController.getAllContents);
 router.get('/getAllContentsForWeb' , contentController.getAllContentsForWeb);
 router.get('/content/:id',contentController.getContentById);
 router.post('/delete/content',contentController.deleteContent);
@@ -21,7 +23,6 @@ router.post('/viewNotesByContentId',contentController.viewNotesByContentId);
 router.post('/viewAllNotes',contentController.viewAllNotes);
 router.post('/deleteNotes' ,contentController.deleteNotes);
 router.post('/delete/notes',contentController.deleteNotesById);
-
 
 router.post('/addFavorite',contentController.addFavorite);
 router.post('/removeFavorite',contentController.removeFavorite);
@@ -36,6 +37,19 @@ router.post('/addPosition',contentController.addPosition);
 // router.get('/websiteContent/:id',contentController.getWebsiteContentById);
 // router.post('/delete/websiteContent',contentController.deleteWebsiteContent);
 
+//country
+router.post('/addCountry',countryController.addCountry);
+router.put('/updateCountry/:id',countryController.updateCountry);
+router.post('/delete/country',countryController.deleteCountry);
+router.get('/getAllCountries',countryController.getAllCountries);
+router.get('/getCountry/:id',countryController.getCountryById);
+
+//state
+router.post('/addState',countryController.addState);
+router.put('/updateState/:id',countryController.updateState);
+router.post('/delete/state',countryController.deleteState);
+router.get('/getAllStates/:id',countryController.getAllStates);
+router.get('/getState/:id',countryController.getStateById);
 
 //faq
 router.post('/addFaq',faqController.addFaq);

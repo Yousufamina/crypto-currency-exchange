@@ -18,7 +18,15 @@ const contentController = {
         console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
 
         const body = JSON.parse(JSON.stringify(request.body));
+        body.countryId =  body.countryId.split(',');
+        if(body.stateId.length){
+            body.stateId =  body.stateId.split(',');
+        }
+        else{
+            delete body.stateId;
+        }
 
+        console.log(body);
         try {
             // check if there is any record with same content name
             const contentByName = await ContentModel.findOne({name: body.name});
@@ -39,7 +47,8 @@ const contentController = {
                             url: body.url,
                             tradingFees: body.tradingFees,
                             assets: body.assets,
-                            country: body.country,
+                            countryId: body.countryId,
+                            stateId: body.stateId,
                             currency: body.currency,
                             promotion: body.promotion,
                             easeOfUse: body.easeOfUse,
@@ -89,6 +98,14 @@ const contentController = {
         console.log("=== Body Params: ===" + (JSON.stringify(request.body)));
 
         const body = JSON.parse(JSON.stringify(request.body));
+        body.countryId =  body.countryId.split(',');
+        if(body.stateId.length){
+            body.stateId =  body.stateId.split(',');
+        }
+        else{
+            delete body.stateId;
+        }
+        console.log(body);
         const id = request.params.id;
         try {
             // check if there is any record with same content name
@@ -99,7 +116,7 @@ const contentController = {
                     .json({msg: "Content with this name already exists"});
             }
 
-            if(request.files) {
+            if(request.files.length) {
                 helper.uploadImage(request, 'image', function (image) {
 
                     let obj = {
@@ -107,7 +124,8 @@ const contentController = {
                         url: body.url,
                         tradingFees: body.tradingFees,
                         assets: body.assets,
-                        country: body.country,
+                        countryId: body.countryId,
+                        stateId: body.stateId,
                         currency: body.currency,
                         promotion: body.promotion,
                         image: image,
@@ -130,6 +148,7 @@ const contentController = {
             }
             else{
                 console.log("else works");
+                delete body.image;
                 let content =  await  ContentModel.findOneAndUpdate({ _id:id }, { $set: body }, { new: true });
                 response
                     .status(200)
@@ -176,8 +195,30 @@ const contentController = {
 
         console.log("====== Contents Get All API =======");
         try {
+            
+            // let string = request.query.country;
+            // let contentsData = await ContentModel.find({ country: { $regex: string, $options: "i" }}).select('-detail,-keyFeatures').lean().exec();
+            
             // get all contents
-            let contentsData = await ContentModel.find().select('-detail,-keyFeatures').lean().exec();
+            let contentsData = [];
+            if(request.query.countryId && request.query.stateId){
+
+                let countryId = request.query.countryId;
+                let stateId = request.query.stateId;
+
+                console.log(`API With Request Query countryId ${countryId}  and  stateID ${stateId}`)
+                contentsData = await ContentModel.find({ $or: [ {countryId: {$in : countryId }} ,  {stateId: {$in : stateId } }]} ).select('-detail,-keyFeatures').populate("countryId").lean().exec();
+            }
+            else if(request.query.countryId ){
+                let countryId = request.query.countryId;
+                console.log(`API With Request Query countryId ${countryId}`)
+                contentsData = await ContentModel.find({  countryId: {$in : countryId } }).select('-detail,-keyFeatures').populate("countryId").lean().exec();
+            }
+            else{
+                console.log("API with get All contents");
+                contentsData = await ContentModel.find().select('-detail,-keyFeatures').populate("countryId").lean().exec();
+            }
+            
             let positions = await PositionModel.findOne().lean().exec();
             let contents;
             if(positions){
@@ -256,7 +297,7 @@ const contentController = {
         console.log("====== getAllContentsForWeb  API =======");
         try {
             // get all contents
-            let contentsData = await ContentModel.find().select('-notes').lean().exec();
+            let contentsData = await ContentModel.find().select('-notes').populate("countryId").lean().exec();
             let positions = await PositionModel.findOne().lean().exec();
             let contents;
             if(positions){
@@ -277,7 +318,7 @@ const contentController = {
                 console.log("else works");
                 contents = contentsData;
             }
-
+             console.log(contents);    
             response
                 .status(200)
                 .json({

@@ -7,10 +7,7 @@ const session = require("express-session");
 const multer =  require("multer");
 const port = process.env.PORT || 4000;
 const app = express();
-// const { uploader, cloudinaryConfig } = require("./config/cloudinaryConfig");
 
-// const multer = require("multer");
-// const storage = multer.memoryStorage();
 const connectDB = require("./config/db");
 connectDB();
 
@@ -20,17 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // app.use('*', cloudinaryConfig);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(session({ secret : '1234567890QWERTY' }));
-app.use(multer({dest:path.join(__dirname, 'public/images/')}).any());
-// app.use(multer({ storage }).single('image'));
 
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Access-Control-Allow-Headers", "Origin, token, X-Requested-With, Content-Type, Accept");
-    next();
-});
-
-// // error handler
 /* eslint no-unused-vars: 0 */
 app.use((err, req, res, next) => {
     // set locals, only providing error in development
@@ -43,13 +30,20 @@ app.use((err, req, res, next) => {
 
 
 app.get("/", (req, res) => {
-    res.send("Server is up and running");
+    res.send("CryptoTrade Server is up and running");
 });
 
 app.use('/', api);
 app.use('/admin', admin);
 
 
-app.listen(port, () => {
-    console.log("SERVER Listening at port : " + port);
+const fs = require('fs');
+const https = require('https');
+const httpsServer = https.createServer({
+       key: fs.readFileSync('/etc/letsencrypt/live/gogamble.app/privkey.pem'),
+       cert: fs.readFileSync('/etc/letsencrypt/live/gogamble.app/fullchain.pem'),
+}, app);
+
+httpsServer.listen(port, () => {
+    console.log("CryptoTrade HTTPS SERVER Listening at port : " + port);
 });

@@ -6,7 +6,6 @@
 
 </style>
 
-
     <div class="ms-panel">
         <div class="ms-panel-header new"><h6>Contents</h6>
             <button type="button" class="btn btn-outline-primary"> <a href="#/add-content">Add New Content</a></button>
@@ -21,9 +20,9 @@
                         <th>Sr#</th>
                         <th>Name</th>
                         <th>URL</th>
+                        <th>Country</th>
                         <th>Trading Fees</th>
                         <th>Assets</th>
-                        <th>Country</th>
                         <th>Currency</th>
                         <th>Promotion</th>
                         <th>Ease Of Use</th>
@@ -43,9 +42,9 @@
                         <td>{{$index+1}}</td>
                         <td>{{content.name}}</td>
                         <td>{{content.url}}</td>
+                        <td>{{getCountries(content.countryId)}}</td>
                         <td>{{content.tradingFees}}</td>
                         <td>{{content.assets}}</td>
-                        <td>{{content.country}}</td>
                         <td>{{content.currency}}</td>
                         <td>{{content.promotion}}</td>
                         <td>

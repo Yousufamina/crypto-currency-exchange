@@ -1,0 +1,68 @@
+
+
+<div class="ms-panel">
+    <div class="ms-panel-header new"><h6>COUNTRY</h6>
+        <button type="button" class="btn btn-outline-primary"> <a href="#/add-country">Add New Country</a> </button>
+    </div>
+    <div class="ms-panel-body">
+        <div class="table-responsive">
+            <table id="example1" class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Sr#</th>
+                    <th>Country</th>
+                      <th>Created Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-if="data.length" id="{{country._id}}" ng-repeat="country in data" >
+                    <td>{{$index+1}}</td>
+                    <td>{{country.name}}</td>
+                    <td>{{dated(country.createdDate)}}</td>
+                    <td>
+                        <a href="#country/{{country._id}}" ><i class="fa fa-pencil"></i> </a>
+                        <a ng-click="removeData(country._id)" ><i class="fa fa-trash"></i> </a>
+                    </td>
+                </tr>
+                <tr ng-if="data.length==0">
+                    <td>No Country added</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" id="confirmation" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <label style="color:#3c3c3c" >Are you sure ! you want to delete?</label>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" ng-click="removeConfirmed()" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    setTimeout(function(){
+        var h =  $('.wrapper').height()
+        h = h-100;
+        $('.content-wrapper').css("height",h)
+    },500)
+
+
+</script>

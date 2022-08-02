@@ -16,9 +16,6 @@ const ContentSchema = new mongoose.Schema({
         assets: {
             type: String
         },
-        country: {
-            type: String
-        },
         currency:{
             type: String
         },
@@ -57,6 +54,13 @@ const ContentSchema = new mongoose.Schema({
             type: Date,
             default: Date.now,
         },
+        countryId: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "country",
+        }],
+        stateId: [{
+            type: mongoose.Schema.Types.ObjectId
+        }],
         status: {
             type: String,
             default: "Active",

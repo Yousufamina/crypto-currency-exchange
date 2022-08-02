@@ -35,6 +35,36 @@ app.config(["$stateProvider","$urlRouterProvider","$httpProvider",function(t,e)
             templateUrl:"/js/templates/add-faq.html",
             controller:'edit-faq'
             })
+            .state("country",{
+                url:"/country",
+                templateUrl:"/js/templates/country.html",
+                controller:'country'
+            })
+            .state("add-country",{
+                url:"/add-country",
+                templateUrl:"/js/templates/add-country.html",
+                controller:'add-country'
+            })
+            .state("edit-country",{
+                url:"/country/{id}",
+                templateUrl:"/js/templates/add-country.html",
+                controller:'edit-country'
+            })
+            .state("state",{
+                url:"/state",
+                templateUrl:"/js/templates/states.html",
+                controller:'state'
+            })
+            .state("add-state",{
+                url:"/add-state",
+                templateUrl:"/js/templates/add-state.html",
+                controller:'add-state'
+            })
+            .state("edit-state",{
+                url:"/state/{id}",
+                templateUrl:"/js/templates/edit-state.html",
+                controller:'edit-state'
+            })
             .state("aboutUs",{
                 url:"/aboutUs",
                 templateUrl:"/js/templates/aboutUs.html",
@@ -51,6 +81,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+    
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
             element.bind('change', function(){
@@ -70,31 +101,41 @@ app.controller("contents",function($scope,$http,$location,$localStorage){
 
     $scope.dated = dateAndTimeFormat;
     $scope.getData = function(){
-            $http({
-                method: "GET",
-                url: "/getAllContentsForWeb",
-            }).success(function (result) {
-                if (result.status == true) {
-                    $scope.data=result.contents;
-                } else {
-                    window.location.href = '/';
-                }
-            })
-
+        $http({
+            method: "GET",
+            url: "/getAllContentsForWeb",
+        }).success(function (result) {
+            if (result.status == true) {
+                $scope.data=result.contents;
+                console.log($scope.data);
+            } else {
+                window.location.href = '/';
+            }
+        })    
+    }
+    $scope.getCountries = function(countries){
+        let names = ' ';
+        if(countries){
+            if (countries.length == 0 ) names = 'No Country Added';
+            countries.forEach(function(country){
+                names += country.name + ' ' ;
+            });
         }
+        else{
+                names = 'No Country Added';
+        }
+        return names;
+    }
     $scope.getData();
     $scope.alreadyexecuteRating = function(val,id, classN) {
-        console.log(val);
-        console.log(classN);
+    
          let className = id+' '+classN;
-        console.log(className);
         let arr = document.getElementsByClassName(className);
         const stars = [];
         for(let k=0;k<5;k++){
             stars.push(arr[k]);
         }
             // const stars = [...document.getElementsByClassName(className)];
-            console.log(stars);
             const starClassActive = className+" fa fa-star";
             // stars.map((star) => {
             //     console.log(val);
@@ -103,6 +144,7 @@ app.controller("contents",function($scope,$http,$location,$localStorage){
                         stars[i].className = starClassActive
                     }
             // });
+        
         }
 
     $scope.removingId = '';
@@ -157,8 +199,6 @@ app.controller("contents",function($scope,$http,$location,$localStorage){
                     .error(function(result){
                     });
             }();
-
-
         }
     };
 
@@ -171,7 +211,7 @@ app.controller("add-content",function($scope,$http,$location,$localStorage){
         url:'',
         tradingFees:'',
         assets:'',
-        country:'',
+        countryId:'',
         currency:'',
         promotion:'',
         easeOfUse :'',
@@ -185,9 +225,7 @@ app.controller("add-content",function($scope,$http,$location,$localStorage){
     CKEDITOR.replace( 'editor1' );
 
     $scope.executeRating = function(className) {
-        console.log("III");
-        console.log(className);
-
+    
         const stars = [...document.getElementsByClassName(className)];
         const starClassActive = className+" fa fa-star";
         const starClassInactive = className+ " fa fa-star-o";
@@ -197,9 +235,8 @@ app.controller("add-content",function($scope,$http,$location,$localStorage){
             star.onclick = () => {
                 i = stars.indexOf(star);
                 $scope.content.easeOFUse = i+1;
-                console.log(i);
                 let ind = i+1;
-                console.log(className + ind);
+                
                 if (star.className === starClassInactive) {
                     for (i; i >= 0; --i) stars[i].className = starClassActive;
                 } else {
@@ -249,12 +286,34 @@ app.controller("add-content",function($scope,$http,$location,$localStorage){
 
     }();
 
+    $scope.getData = function(){
+        $http({
+            method: "GET",
+            url: "/getAllCountries",
+        }).success(function (result) {
+            if (result.status == true) {
+                $scope.countries=result.countries;
+            } else {
+                window.location.href = '/';
+            }
+        })
+    }();
+
+    $scope.getStates = function(){
+
+        $http({
+            method: "GET",
+            url: "/getAllStates/"+$scope.content.countryId,
+        }).success(function (result) {
+            if (result.status == true) {
+                $scope.states=result.statesArr;
+            }
+        })
+    }
+
     $scope.save=function(){
         $scope.content.keyFeatures = CKEDITOR.instances["editor1"].getData();
-        console.log($scope.content.easeOFUse );
-        console.log($scope.content.reputation );
-        console.log($scope.content.depositMethods );
-        console.log($scope.content.fees );
+     
         var fd = new FormData();
         for(var k in $scope.content){
             if(!$scope.content[k]){
@@ -289,7 +348,7 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
         url:'',
         tradingFees:'',
         assets:'',
-        country:'',
+        countryId:'',
         currency:'',
         promotion:'',
         easeOfUse :'',
@@ -301,10 +360,32 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
         keyFeatures:''
     }
 
-    $scope.executeRating = function(className) {
-        console.log("III");
-        console.log(className);
+    $scope.getCountriesData = function(){
+        $http({
+            method: "GET",
+            url: "/getAllCountries",
+        }).success(function (result) {
+            if (result.status == true) {
+                $scope.countries=result.countries;
+            } else {
+                window.location.href = '/';
+            }
+        })
+    }();
+    $scope.getStates = function(){
 
+        $http({
+            method: "GET",
+            url: "/getAllStates/"+$scope.content.countryId,
+        }).success(function (result) {
+            if (result.status == true) {
+                $scope.states=result.statesArr;
+            }
+        })
+    };
+
+    $scope.executeRating = function(className) {
+      
         const stars = [...document.getElementsByClassName(className)];
         const starClassActive = className+" fa fa-star";
         const starClassInactive = className+ " fa fa-star-o";
@@ -314,9 +395,9 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
             star.onclick = () => {
                 i = stars.indexOf(star);
                 $scope.content.easeOFUse = i+1;
-                console.log(i);
+              
                 let ind = i+1;
-                console.log(className + ind);
+               
                 if (star.className === starClassInactive) {
                     for (i; i >= 0; --i) stars[i].className = starClassActive;
                 } else {
@@ -377,7 +458,9 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
                 $scope.content.url=data.url;
                 $scope.content.tradingFees =data.tradingFees;
                 $scope.content.assets =data.assets;
-                $scope.content.country=data.country;
+                $scope.content.countryId = data.countryId;
+                $scope.getStates();
+                $scope.content.stateId = data.stateId;
                 $scope.content.currency = data.currency;
                 $scope.content.promotion = data.promotion;
                 $scope.content.easeOfUse = data.easeOfUse;
@@ -390,7 +473,6 @@ app.controller("edit-content",function($scope,$http,$location,$localStorage,$sta
 
                 CKEDITOR.replace( 'editor1' );
                 CKEDITOR.instances["editor1"].setData($scope.content.keyFeatures);
-
             } else {
                 window.location.href = '/';
             }
@@ -750,7 +832,7 @@ app.controller("showFeedback",function($scope,$http,$location,$localStorage,$sta
     $scope.dated = dateAndTimeFormat;
 
     $scope.alreadyexecuteRating = function(val,id, classN) {
-
+        val = Math.round(val);
         let className = id+' '+classN;
         let arr = document.getElementsByClassName(className);
         const stars = [];
@@ -808,6 +890,280 @@ app.controller("showFeedback",function($scope,$http,$location,$localStorage,$sta
                 }
             })
         }
+    }
+
+});
+app.controller("add-country",function($scope,$http,$location,$localStorage){
+
+    $scope.heading = 'Add New Country';
+    $scope.country = {
+        name:''
+    }
+
+    $scope.save=function(){
+        var fd = new FormData();
+        for(var k in $scope.country){
+            if(!$scope.country[k]){
+                window.toastr.warning("Please provide "+k.toUpperCase().replace('_',' '))
+                return false;
+            }
+            fd.append(k, $scope.country[k]);
+        }
+        $http.post('/addCountry', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+            .success(function(result){
+                $location.path('country');
+                window.toastr.success(result.msg)
+            })
+            .error(function(result){
+                window.toastr.warning(result.msg)
+            });
+    }
+
+});
+app.controller("country",function($scope,$http,$location,$localStorage){
+
+    $scope.dated = dateAndTimeFormat;
+    $scope.getData = function(){
+        $http({
+            method: "GET",
+            url: "/getAllCountries",
+        }).success(function (result) {
+            if (result.status == true) {
+                $scope.data=result.countries;
+            } else {
+                window.location.href = '/';
+            }
+        })
+    }
+
+    $scope.getData();
+    $scope.removingId = '';
+    $scope.removeData = function(id){
+        $scope.removingId = id;
+        $("#confirmation").modal("show")
+    }
+
+    $scope.removeConfirmed  = function(){
+        if($scope.removingId!="") {
+
+            var fd = new FormData();
+            fd.append('id',$scope.removingId);
+
+            $http.post('/delete/country', fd,{
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }).success(function(data){
+                if (data.status) {
+                    $("#"+$scope.removingId).remove();
+                    $("#confirmation").modal("hide");
+                    window.toastr.success(data.msg);
+                    $scope.getData();
+                }
+                else {
+                    window.toastr.warning(data.msg);
+                    $("#confirmation").modal("hide")
+
+                }
+            })
+        }
+    }
+});
+app.controller("edit-country",function($scope,$http,$location,$localStorage,$stateParams){
+
+    $scope.heading = 'Update Country';
+    $scope.country = {
+        name:''
+    }
+
+    $scope.getData = function() {
+        $http({
+            method: "GET",
+            url: "/getCountry/" + $stateParams.id,
+        }).success(function (result) {
+            if (result.status == true) {
+                var data = result.country;
+                $scope.country.name = data.name;
+            } else {
+                window.location.href = '/';
+            }
+        });
+    }
+    $scope.getData();
+    $scope.save=function(){
+        var fd = new FormData();
+        for(var k in $scope.country){
+            if(!$scope.country[k]){
+                window.toastr.warning("Please provide "+k.toUpperCase().replace('_',' '));
+                return false;
+            }
+            fd.append(k, $scope.country[k]);
+        }
+
+        $http.put('/updateCountry/'+$stateParams.id, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+            .success(function(result){
+                $location.path( 'country');
+                window.toastr.success(result.msg)
+            })
+            .error(function(result){
+                window.toastr.warning(result.msg)
+            });
+    }
+
+});
+app.controller("add-state",function($scope,$http,$location,$localStorage){
+
+    $scope.heading = 'Add New State';
+    $scope.state = {
+        name:'',
+        countryId: ''
+    }
+
+    $scope.getData = function(){
+        $http({
+            method: "GET",
+            url: "/getAllCountries",
+        }).success(function (result) {
+            if (result.status == true) {
+                $scope.countries=result.countries;
+            } else {
+                window.location.href = '/';
+            }
+        })
+    }();
+
+    $scope.save=function(){
+        var fd = new FormData();
+        for(var k in $scope.state){
+            if(!$scope.state[k]){
+                window.toastr.warning("Please provide "+k.toUpperCase().replace('_',' '))
+                return false;
+            }
+            fd.append(k, $scope.state[k]);
+        }
+        $http.post('/addState', fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+            .success(function(result){
+                $location.path('state');
+                window.toastr.success(result.msg)
+            })
+            .error(function(result){
+                window.toastr.warning(result.msg)
+            });
+    }
+
+});
+app.controller("state",function($scope,$http,$location,$localStorage){
+
+    $scope.dated = dateAndTimeFormat;
+
+    $scope.getData = function(){
+        $http({
+            method: "GET",
+            url: "/getAllCountries",
+        }).success(function (result) {
+            if (result.status == true) {
+                let countries = result.countries;
+                $scope.data = [];
+                countries.forEach((country)=>{
+                    if(country.states.length){
+                        let states = country.states;
+                        let stateName = '';
+                        states.forEach((state)=>{
+                            state.countryName = country.name;
+                            state.creatdDate = country.createdDate;
+                            $scope.data.push(state);
+                        });
+                    }
+                });
+            } else {
+                window.location.href = '/';
+            }
+        })
+    }
+
+    $scope.getData();
+    $scope.removingId = '';
+    $scope.removeData = function(id){
+        $scope.removingId = id;
+        $("#confirmation").modal("show")
+    }
+
+    $scope.removeConfirmed  = function(){
+        if($scope.removingId!="") {
+
+            var fd = new FormData();
+            fd.append('id',$scope.removingId);
+
+            $http.post('/delete/state', fd,{
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }).success(function(data){
+                if (data.status) {
+                    $("#"+$scope.removingId).remove();
+                    $("#confirmation").modal("hide");
+                    window.toastr.success(data.msg);
+                    $scope.getData();
+                }
+                else {
+                    window.toastr.warning(data.msg);
+                    $("#confirmation").modal("hide")
+
+                }
+            })
+        }
+    }
+});
+app.controller("edit-state",function($scope,$http,$location,$localStorage,$stateParams){
+
+    $scope.heading = 'Update State';
+    $scope.state = {
+        name:'',
+    }
+
+    $scope.getData = function() {
+        $http({
+            method: "GET",
+            url: "/getState/" + $stateParams.id,
+        }).success(function (result) {
+            if (result.status == true) {
+                var data = result.country;
+                $scope.state.name = data.states[0].name;
+            } else {
+                window.location.href = '/';
+            }
+        });
+    }
+    $scope.getData();
+
+    $scope.save=function(){
+        var fd = new FormData();
+        for(var k in $scope.state){
+            if(!$scope.state[k]){
+                window.toastr.warning("Please provide "+k.toUpperCase().replace('_',' '));
+                return false;
+            }
+            fd.append(k, $scope.state[k]);
+        }
+
+        $http.put('/updateState/'+$stateParams.id, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+            .success(function(result){
+                $location.path( 'state');
+                window.toastr.success(result.msg)
+            })
+            .error(function(result){
+                window.toastr.warning(result.msg)
+            });
     }
 
 });
