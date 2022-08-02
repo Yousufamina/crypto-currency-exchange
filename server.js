@@ -42,7 +42,8 @@ const https = require('https');
 const httpsServer = https.createServer({
        key: fs.readFileSync('/etc/letsencrypt/live/gogamble.app/privkey.pem'),
        cert: fs.readFileSync('/etc/letsencrypt/live/gogamble.app/fullchain.pem'),
-}, app);
+}, 
+app);
 
 httpsServer.listen(port, () => {
     console.log("CryptoTrade HTTPS SERVER Listening at port : " + port);
