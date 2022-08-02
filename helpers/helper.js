@@ -76,7 +76,7 @@ const helper = {
                 from: '"Crypto Trade Support" <cryptotrade.click@gmail.com>', // sender address
                 to: email, // list of receivers
                 subject: 'Change Password Email', // Subject line
-                text: '', // plaintext body
+                text: htmlToSend, // plaintext body
                 html: htmlToSend // html body
             };
 

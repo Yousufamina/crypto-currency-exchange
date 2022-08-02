@@ -47,4 +47,5 @@ app);
 
 httpsServer.listen(port, () => {
     console.log("CryptoTrade HTTPS SERVER Listening at port : " + port);
-});
+})
+
